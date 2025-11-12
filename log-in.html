@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Emotion Commerce</title>
+
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Import Inter font family -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Configure Tailwind with custom theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-primary': '#1A73E8',
+                        'brand-cta': '#FF6B35',
+                        'brand-cta-hover': '#E55C2E',
+                        'brand-bg': '#F5F7FA',
+                        'brand-text-primary': '#1C1C1E',
+                        'brand-text-secondary': '#5F6368',
+                        'brand-card-bg': '#FFFFFF',
+                        'brand-border': '#D8DEE9',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF7 50%, #F5F7FA 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #1A73E8 0%, #4A90E2 100%);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, #FF6B35 0%, #FFA07A 100%);
+            bottom: -80px;
+            right: -80px;
+            animation-delay: 5s;
+        }
+
+        .blob-3 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #9B59B6 0%, #C39BD3 100%);
+            top: 50%;
+            right: 10%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+
+        /* Card Styles */
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(216, 222, 233, 0.5);
+            border-radius: 2rem;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Input Styles */
+        .form-input {
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+        }
+
+        /* Button Hover Animation */
+        .btn-primary {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(229, 92, 46, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Emoji Mood Selector */
+        .mood-emoji {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .mood-emoji:hover {
+            transform: scale(1.3) rotate(10deg);
+        }
+
+        .mood-emoji.selected {
+            transform: scale(1.4);
+            filter: drop-shadow(0 4px 8px rgba(26, 115, 232, 0.3));
+        }
+
+        /* Illustration Animation */
+        .illustration {
+            animation: bounce 3s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        /* Password Toggle */
+        .password-toggle {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: #1A73E8;
+        }
+
+        /* Floating Labels Effect */
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            color: #5F6368;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -0.5rem;
+            left: 0.75rem;
+            font-size: 0.75rem;
+            color: #1A73E8;
+            background: white;
+            padding: 0 0.25rem;
+        }
+
+        /* Glow Effect on Focus */
+        .glow-on-focus:focus {
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<!-- Animated Background Blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- Main Container -->
+<div class="min-h-screen flex items-center justify-center px-6 py-12 relative z-10">
+    <div class="w-full max-w-5xl">
+        <div class="login-card grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
+
+            <!-- Left Side: Welcome Section -->
+            <div class="p-8 lg:p-12 flex flex-col justify-center bg-gradient-to-br from-brand-primary/5 to-brand-cta/5 relative overflow-hidden">
+                <!-- Decorative Elements -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 bg-brand-cta/10 rounded-full blur-3xl"></div>
+
+                <!-- Content -->
+                <div class="relative z-10">
+                    <!-- Illustration -->
+                    <div class="illustration mb-8 text-center lg:text-left">
+                        <svg class="w-32 h-32 mx-auto lg:mx-0" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Shopping bag with heart -->
+                            <rect x="50" y="60" width="100" height="120" rx="8" fill="#FF6B35" opacity="0.2"/>
+                            <path d="M70 60 C70 40, 130 40, 130 60" stroke="#FF6B35" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <circle cx="100" cy="110" r="25" fill="#1A73E8" opacity="0.3"/>
+                            <path d="M100 100 L90 115 L95 115 L95 125 L105 125 L105 115 L110 115 Z" fill="#1A73E8"/>
+                            <!-- Sparkles -->
+                            <circle cx="160" cy="70" r="3" fill="#FFD700"/>
+                            <circle cx="40" cy="100" r="4" fill="#FFD700"/>
+                            <circle cx="150" cy="140" r="3" fill="#FFD700"/>
+                        </svg>
+                    </div>
+
+                    <!-- Welcome Text -->
+                    <h1 class="text-3xl lg:text-4xl font-bold text-brand-text-primary mb-4">
+                        Welcome Back
+                    </h1>
+                    <p class="text-lg text-brand-text-secondary mb-8">
+                        Your shopping experience continues from where your mood left off.
+                    </p>
+
+                    <!-- Feature List -->
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-brand-primary" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <span class="text-brand-text-secondary">Personalized mood shopping</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-cta/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-brand-cta" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <span class="text-brand-text-secondary">Exclusive community deals</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <span class="text-brand-text-secondary">Real-time price tracking</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Login Form -->
+            <div class="p-8 lg:p-12 flex flex-col justify-center">
+                <div class="w-full max-w-md mx-auto">
+                    <h2 class="text-2xl font-bold text-brand-text-primary mb-2">Sign In</h2>
+                    <p class="text-brand-text-secondary mb-8">Enter your credentials to continue</p>
+
+                    <form id="loginForm" class="space-y-6">
+                        <!-- Email Input -->
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-brand-text-secondary mb-2">Email Address</label>
+                            <input
+                                    type="email"
+                                    id="email"
+                                    placeholder="you@example.com"
+                                    class="form-input glow-on-focus w-full px-4 py-3 rounded-xl border border-brand-border bg-white text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all duration-300"
+                                    required
+                            >
+                        </div>
+
+                        <!-- Password Input -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-brand-text-secondary mb-2">Password</label>
+                            <div class="relative">
+                                <input
+                                        type="password"
+                                        id="password"
+                                        placeholder="••••••••"
+                                        class="form-input glow-on-focus w-full px-4 py-3 rounded-xl border border-brand-border bg-white text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all duration-300"
+                                        required
+                                >
+                                <button type="button" class="password-toggle absolute right-4 top-1/2 -translate-y-1/2 text-brand-text-secondary" onclick="togglePassword()">
+                                    <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 rounded border-brand-border text-brand-primary focus:ring-brand-primary/50">
+                                <span class="ml-2 text-sm text-brand-text-secondary">Remember me</span>
+                            </label>
+                            <a href="#" class="text-sm text-brand-primary hover:underline font-medium">Forgot Password?</a>
+                        </div>
+
+                        <!-- Sign In Button -->
+                        <button
+                                type="submit"
+                                class="btn-primary w-full bg-brand-cta text-white font-bold text-lg py-4 rounded-full hover:bg-brand-cta-hover transition-all duration-300"
+                        >
+                            Sign In
+                        </button>
+
+                        <!-- Divider -->
+                        <div class="relative my-6">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-brand-border"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-4 bg-white text-brand-text-secondary">Or continue with</span>
+                            </div>
+                        </div>
+
+                        <!-- Social Login Buttons -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <button type="button" class="flex items-center justify-center px-4 py-3 rounded-xl border border-brand-border bg-white hover:bg-gray-50 transition-all duration-300">
+                                <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                </svg>
+                                Google
+                            </button>
+                            <button type="button" class="flex items-center justify-center px-4 py-3 rounded-xl border border-brand-border bg-white hover:bg-gray-50 transition-all duration-300">
+                                <svg class="w-5 h-5 mr-2" fill="#1877F2" viewBox="0 0 24 24">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                Facebook
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Mood Selector -->
+                    <div class="mt-8 pt-6 border-t border-brand-border">
+                        <p class="text-sm text-brand-text-secondary text-center mb-4">How are you feeling today?</p>
+                        <div class="flex justify-center space-x-4">
+                            <span class="mood-emoji" data-mood="happy" title="Happy">😊</span>
+                            <span class="mood-emoji" data-mood="excited" title="Excited">😄</span>
+                            <span class="mood-emoji" data-mood="sad" title="Sad">😔</span>
+                            <span class="mood-emoji" data-mood="stressed" title="Stressed">😤</span>
+                            <span class="mood-emoji" data-mood="calm" title="Calm">😌</span>
+                        </div>
+                    </div>
+
+                    <!-- Sign Up Link -->
+                    <p class="mt-8 text-center text-sm text-brand-text-secondary">
+                        Don't have an account?
+                        <a href="./sign-up.html" class="text-brand-primary hover:underline font-medium">Sign up for free</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Password Toggle
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+        }
+    }
+
+    // Mood Emoji Selection
+    const moodEmojis = document.querySelectorAll('.mood-emoji');
+    moodEmojis.forEach(emoji => {
+        emoji.addEventListener('click', function() {
+            moodEmojis.forEach(e => e.classList.remove('selected'));
+            this.classList.add('selected');
+            const mood = this.dataset.mood;
+            console.log(`Selected mood: ${mood}`);
+
+            // Store mood in memory (could be used for personalization)
+            const loginState = { selectedMood: mood };
+            console.log('Login state:', loginState);
+        });
+    });
+
+    // Form Submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // Simulate login
+        console.log('Login attempt:', { email, password });
+
+        // Show success message and redirect
+        alert('Login successful! Redirecting to shop...');
+        window.location.href = './shop.html';
+    });
+
+    // Add floating animation to illustration on mouse move
+    document.addEventListener('mousemove', (e) => {
+        const illustration = document.querySelector('.illustration svg');
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        illustration.style.transform = `translate(${x}px, ${y}px)`;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Emotion Commerce</title>
+
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Import Inter font family -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Configure Tailwind with custom theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-primary': '#1A73E8', // Primary Accent
+                        'brand-cta': '#FF6B35',      // Button CTA
+                        'brand-cta-hover': '#E55C2E', // Button CTA Hover
+                        'brand-bg': '#F5F7FA',       // Background
+                        'brand-text-primary': '#1C1C1E',   // Text Primary
+                        'brand-text-secondary': '#5F6368', // Text Secondary
+                        'brand-card-bg': '#FFFFFF',    // Card Background
+                        'brand-border': '#D8DEE9',     // Dividers/Borders
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Shared Styles */
+        .soft-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Nav link underline animation */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px; /* Position underline below the text */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1A73E8; /* brand-primary */
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link:hover {
+            color: #1C1C1C; /* brand-text-primary */
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Radio/Toggle Button Styles */
+        .radio-option, .payment-option {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .radio-option.active, .payment-option.active {
+            border-color: #1A73E8; /* brand-primary */
+            background-color: #F0F6FF; /* A very light blue */
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-brand-bg font-sans text-brand-text-primary antialiased">
+
+<!-- Navigation Bar -->
+<header class="w-full bg-brand-bg/80 backdrop-blur-sm sticky top-0 z-50 border-b border-brand-border/50">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
+        <!-- Logo -->
+        <a href="./index.html" class="text-xl font-bold text-brand-text-primary">
+            Emotion Commerce
+        </a>
+
+        <!-- Menu Items (Mood Shopping is now active) -->
+        <div class="hidden md:flex items-center space-x-2">
+            <a href="index.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Home</a>
+            <a href="shop.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Shop</a>
+            <a href="community-deals.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Community Deals</a>
+            <a href="mood.html" class="nav-link px-4 py-2 text-brand-text-primary font-medium rounded-full transition-all duration-300 active">Mood Shopping</a>
+            <a href="./price-trends.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Price Trends</a>
+        </div>
+
+        <!-- Right Side: Auth & Cart (Cart icon still highlighted) -->
+        <div class="flex items-center space-x-3">
+            <a href="./log-in.html" class="px-4 py-2 text-brand-text-secondary font-medium rounded-full hover:bg-gray-200/70 transition-all duration-300 hidden sm:block">Login</a>
+            <a href="./sign-up.html" class="px-4 py-2 text-brand-text-primary bg-white border border-brand-border rounded-full hover:bg-gray-100 transition-all duration-300 soft-shadow hidden sm:block">Sign Up</a>
+            <a href="./cart.html">
+                <button class="p-2 rounded-full bg-brand-primary/10 text-brand-primary transition-all duration-300" aria-label="Cart">
+                    <!-- Cart Icon -->
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </button>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+
+    <!-- Page Title & Subheading -->
+    <div class="mb-10">
+        <h1 class="text-4xl font-bold text-brand-text-primary tracking-tight">
+            Checkout
+        </h1>
+        <p class="mt-2 text-lg text-brand-text-secondary">
+            Confirm your details and complete your purchase.
+        </p>
+    </div>
+
+    <!-- Main Layout: Form + Summary -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-12">
+
+        <!-- Left Section: Shipping & Contact Form -->
+        <section class="lg:col-span-2 reveal-card">
+            <div class="bg-brand-card-bg border border-brand-border rounded-2xl p-8 soft-shadow">
+                <form action="#" method="POST" class="space-y-6">
+
+                    <!-- Contact Details -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-brand-text-primary mb-5">Contact & Shipping</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="full-name" class="block text-sm font-medium text-brand-text-secondary mb-2">Full Name</label>
+                                <input type="text" name="full-name" id="full-name" placeholder="Your full name" class="w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all duration-300">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-brand-text-secondary mb-2">Phone Number</label>
+                                <input type="tel" name="phone" id="phone" placeholder="+1 (555) 123-4567" class="w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all duration-300">
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <label for="email" class="block text-sm font-medium text-brand-text-secondary mb-2">Email Address</label>
+                            <input type="email" name="email" id="email" placeholder="you@example.com" class="w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all duration-300">
+                        </div>
+                        <div class="mt-6">
+                            <label for="address" class="block text-sm font-medium text-brand-text-secondary mb-2">Delivery Address</label>
+                            <textarea name="address" id="address" rows="4" placeholder="1234 Main St, Anytown, USA 12345" class="w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-brand-text-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/50 transition-all duration-300"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Options -->
+                    <div class="pt-6 border-t border-brand-border">
+                        <h3 class="text-lg font-bold text-brand-text-primary mb-4">Delivery Option</h3>
+                        <div id="delivery-options" class="space-y-4">
+                            <div class="radio-option active border border-brand-border rounded-lg p-4 flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-medium text-brand-text-primary">Standard Delivery</h4>
+                                    <p class="text-sm text-brand-text-secondary">3-5 business days</p>
+                                </div>
+                                <span class="font-medium text-brand-text-primary">$5.00</span>
+                            </div>
+                            <div class="radio-option border border-brand-border rounded-lg p-4 flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-medium text-brand-text-primary">Green Community Delivery</h4>
+                                    <p class="text-sm text-brand-text-secondary">Eco-friendly, 4-6 business days</p>
+                                </div>
+                                <span class="font-medium text-green-600">$2.50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </section>
+
+        <!-- Right Section: Order Summary -->
+        <aside class="lg:col-span-1 mt-10 lg:mt-0 reveal-card">
+            <div class="bg-brand-card-bg border border-brand-border rounded-2xl p-8 soft-shadow sticky top-28">
+                <h2 class="text-2xl font-bold text-brand-text-primary mb-6">Order Summary</h2>
+
+                <!-- Line Items -->
+                <div class="space-y-4 text-lg">
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-secondary">Subtotal</span>
+                        <span class="font-medium text-brand-text-primary">$299.97</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-secondary">Est. Tax</span>
+                        <span class="font-medium text-brand-text-primary">$24.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-text-secondary">Shipping</span>
+                        <span id="shipping-cost" class="font-medium text-brand-text-primary">$5.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-green-600">Community Discount</span>
+                        <span class="font-medium text-green-600">-$10.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-blue-600">Mood Offer Applied</span>
+                        <span class="font-medium text-blue-600">-$5.00</span>
+                    </div>
+                </div>
+
+                <hr class="border-brand-border my-6">
+
+                <!-- Total -->
+                <div class="flex justify-between items-center">
+                    <span class="text-xl font-bold text-brand-text-primary">Total</span>
+                    <span id="total-price" class="text-3xl font-bold text-brand-primary">$313.97</span>
+                </div>
+
+                <!-- Payment Options -->
+                <div class="pt-6 mt-6 border-t border-brand-border">
+                    <h3 class="text-lg font-bold text-brand-text-primary mb-4">Payment Method</h3>
+                    <div id="payment-options" class="space-y-3">
+                        <div class="payment-option active border border-brand-border rounded-lg p-4 flex items-center space-x-3">
+                            <span class="text-xl">✔️</span>
+                            <span class="font-medium text-brand-text-primary">UPI</span>
+                        </div>
+                        <div class="payment-option border border-brand-border rounded-lg p-4 flex items-center space-x-3">
+                            <span class="text-xl">💳</span>
+                            <span class="font-medium text-brand-text-primary">Credit / Debit Card</span>
+                        </div>
+                        <div class="payment-option border border-brand-border rounded-lg p-4 flex items-center space-x-3">
+                            <span class="text-xl">📦</span>
+                            <span class="font-medium text-brand-text-primary">Cash on Delivery</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <button class="mt-8 w-full bg-brand-cta text-white font-bold text-lg py-4 rounded-full soft-shadow-lg hover:bg-brand-cta-hover hover:soft-shadow-lg-hover transform hover:-translate-y-0.5 transition-all duration-300 ease-in-out">
+                    Confirm & Pay
+                </button>
+            </div>
+        </aside>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-brand-border mt-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 text-center">
+        <p classs="text-brand-text-secondary">
+            © 2025 Emotion Commerce. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<!-- Vanilla JavaScript for Interactions -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. Delivery Option Toggle ---
+        const deliveryOptionsContainer = document.getElementById('delivery-options');
+        const deliveryOptions = deliveryOptionsContainer.querySelectorAll('.radio-option');
+        const shippingCostEl = document.getElementById('shipping-cost');
+        const totalEl = document.getElementById('total-price');
+
+        // Mock prices
+        const prices = {
+            subtotal: 299.97,
+            tax: 24.00,
+            communityDiscount: -10.00,
+            moodOffer: -5.00,
+            shipping: 5.00 // Default shipping
+        };
+
+        function updateTotal() {
+            const total = prices.subtotal + prices.tax + prices.shipping + prices.communityDiscount + prices.moodOffer;
+            totalEl.textContent = `$${total.toFixed(2)}`;
+            shippingCostEl.textContent = `$${prices.shipping.toFixed(2)}`;
+        }
+
+        deliveryOptionsContainer.addEventListener('click', (e) => {
+            const selectedOption = e.target.closest('.radio-option');
+            if (!selectedOption) return;
+
+            // Update active class
+            deliveryOptions.forEach(option => option.classList.remove('active'));
+            selectedOption.classList.add('active');
+
+            // Update prices
+            if (selectedOption.textContent.includes('Green Community')) {
+                prices.shipping = 2.50;
+            } else {
+                prices.shipping = 5.00;
+            }
+            updateTotal();
+        });
+
+        // --- 2. Payment Option Toggle ---
+        const paymentOptionsContainer = document.getElementById('payment-options');
+        const paymentOptions = paymentOptionsContainer.querySelectorAll('.payment-option');
+
+        paymentOptionsContainer.addEventListener('click', (e) => {
+            const selectedOption = e.target.closest('.payment-option');
+            if (!selectedOption) return;
+
+            paymentOptions.forEach(option => option.classList.remove('active'));
+            selectedOption.classList.add('active');
+        });
+
+        // --- 3. Scroll Reveal Animation ---
+        const cards = document.querySelectorAll('.reveal-card');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        cards.forEach(card => observer.observe(card));
+
+        // Initial total calculation on load
+        updateTotal();
+    });
+</script>
+
+</body>
+</html>

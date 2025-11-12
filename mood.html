@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop by Mood - Emotion Commerce</title>
+
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Import Inter font family -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Configure Tailwind with custom theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-primary': '#1A73E8', // Primary Accent
+                        'brand-cta': '#FF6B35',      // Button CTA
+                        'brand-cta-hover': '#E55C2E', // Button CTA Hover
+                        'brand-bg': '#F5F7FA',       // Background
+                        'brand-text-primary': '#1C1C1E',   // Text Primary
+                        'brand-text-secondary': '#5F6368', // Text Secondary
+                        'brand-card-bg': '#FFFFFF',    // Card Background
+                        'brand-border': '#D8DEE9',     // Dividers/Borders
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Shared Styles */
+        .soft-shadow {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Nav link underline animation */
+        .nav-link {
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px; /* Position underline below the text */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1A73E8; /* brand-primary */
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link:hover {
+            color: #1C1C1C; /* brand-text-primary */
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal-card {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Active state for mood card */
+        .mood-card.active-mood {
+            border-color: #1A73E8; /* brand-primary */
+            box-shadow: 0 8px 20px rgba(26, 115, 232, 0.15);
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="bg-brand-bg font-sans text-brand-text-primary antialiased">
+
+<!-- Navigation Bar -->
+<header class="w-full bg-brand-bg/80 backdrop-blur-sm sticky top-0 z-50 border-b border-brand-border/50">
+    <nav class="max-w-7xl mx-auto px-6 lg:px-8 py-4 flex justify-between items-center">
+        <!-- Logo -->
+        <a href="./index.html" class="text-xl font-bold text-brand-text-primary">
+            Emotion Commerce
+        </a>
+
+        <!-- Menu Items (Mood Shopping is now active) -->
+        <div class="hidden md:flex items-center space-x-2">
+            <a href="index.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Home</a>
+            <a href="shop.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Shop</a>
+            <a href="community-deals.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Community Deals</a>
+            <a href="mood.html" class="nav-link px-4 py-2 text-brand-text-primary font-medium rounded-full transition-all duration-300 active">Mood Shopping</a>
+            <a href="./price-trends.html" class="nav-link px-4 py-2 text-brand-text-secondary font-medium rounded-full transition-all duration-300">Price Trends</a>
+        </div>
+
+        <!-- Right Side: Auth & Cart -->
+        <div class="flex items-center space-x-3">
+            <a href="./log-in.html" class="px-4 py-2 text-brand-text-secondary font-medium rounded-full hover:bg-gray-200/70 transition-all duration-300 hidden sm:block">Login</a>
+            <a href="./sign-up.html" class="px-4 py-2 text-brand-text-primary bg-white border border-brand-border rounded-full hover:bg-gray-100 transition-all duration-300 soft-shadow hidden sm:block">Sign Up</a>
+            <a href="./cart.html">
+                <button class="p-2 rounded-full bg-brand-primary/10 text-brand-primary transition-all duration-300" aria-label="Cart">
+                    <!-- Cart Icon -->
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </button>
+            </a>
+        </div>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+
+    <!-- Page Title & Subheading -->
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-brand-text-primary tracking-tight">
+            Shop by Mood
+        </h1>
+        <p class="mt-2 text-lg text-brand-text-secondary max-w-2xl mx-auto">
+            Choose how you feel right now and let us recommend what’s best for you.
+        </p>
+    </div>
+
+    <!-- Mood Selection Grid -->
+    <section class="mt-12">
+        <div id="mood-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+
+            <!-- Mood Card: Happy -->
+            <button data-mood="Happy" class="mood-card reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow text-center flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-brand-primary hover:-translate-y-1">
+                <svg class="w-12 h-12 text-yellow-500 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                <span class="text-lg font-medium text-brand-text-primary">Happy</span>
+            </button>
+
+            <!-- Mood Card: Sad -->
+            <button data-mood="Sad" class="mood-card reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow text-center flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-brand-primary hover:-translate-y-1">
+                <svg class="w-12 h-12 text-blue-500 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M16 16s-1.5-2-4-2-4 2-4 2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                <span class="text-lg font-medium text-brand-text-primary">Sad</span>
+            </button>
+
+            <!-- Mood Card: Excited -->
+            <button data-mood="Excited" class="mood-card reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow text-center flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-brand-primary hover:-translate-y-1">
+                <svg class="w-12 h-12 text-orange-500 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <span class="text-lg font-medium text-brand-text-primary">Excited</span>
+            </button>
+
+            <!-- Mood Card: Stressed -->
+            <button data-mood="Stressed" class="mood-card reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow text-center flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-brand-primary hover:-translate-y-1">
+                <svg class="w-12 h-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18.01-8.24-14.26c-.04-.08-.09-.16-.14-.23a1.8 1.8 0 0 0-3.18 0c-.05.07-.1.15-.14.23L2.27 18.01a1.94 1.94 0 0 0 1.7 2.98h16.06a1.94 1.94 0 0 0 1.7-2.98z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span class="text-lg font-medium text-brand-text-primary">Stressed</span>
+            </button>
+
+            <!-- Mood Card: Calm -->
+            <button data-mood="Calm" class="mood-card reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow text-center flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-brand-primary hover:-translate-y-1">
+                <svg class="w-12 h-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 11.6 14 15.1a2 2 0 0 1-2.8 0L8.7 12.6a2 2 0 0 1 0-2.8l3.5-3.5a2 2 0 0 1 2.8 0L17.5 9a2 2 0 0 1 0 2.8Z"></path><path d="M19 19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2"></path><path d="M6 16.5V19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2.5"></path></svg>
+                <span class="text-lg font-medium text-brand-text-primary">Calm</span>
+            </button>
+
+            <!-- Mood Card: Motivated -->
+            <button data-mood="Motivated" class="mood-card reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow text-center flex flex-col items-center justify-center transition-all duration-300 hover:shadow-lg hover:border-brand-primary hover:-translate-y-1">
+                <svg class="w-12 h-12 text-purple-500 mb-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                <span class="text-lg font-medium text-brand-text-primary">Motivated</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Recommendations Section (Initially Hidden) -->
+    <section id="recommendations" class="mt-16 hidden">
+        <!-- Title -->
+        <h2 class="text-3xl font-bold text-brand-text-primary mb-8">
+            Recommended for Your <span id="selected-mood" class="text-brand-primary"></span> Mood
+        </h2>
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <!-- Placeholder Product Card 1 -->
+            <div class="reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow flex flex-col">
+                <div class="aspect-video bg-brand-bg rounded-lg mb-4 overflow-hidden">
+                    <img src="https://placehold.co/400x300/F5F7FA/5F6368?text=Product+Image" alt="Product Image" class="w-full h-full object-cover">
+                </div>
+                <h3 id="prod-name-1" class="text-lg font-bold text-brand-text-primary">Recommendation 1</h3>
+                <p class="mt-1 text-sm text-brand-text-secondary">A product perfect for your mood.</p>
+                <div class="flex-grow"></div> <!-- Spacer -->
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-xl font-bold text-brand-primary">$49.99</span>
+                    <button class="bg-brand-cta text-white font-medium text-sm px-5 py-2.5 rounded-full hover:bg-brand-cta-hover transition-all duration-300">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+
+            <!-- Placeholder Product Card 2 -->
+            <div class="reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow flex flex-col">
+                <div class="aspect-video bg-brand-bg rounded-lg mb-4 overflow-hidden">
+                    <img src="https://placehold.co/400x300/F5F7FA/5F6368?text=Product+Image" alt="Product Image" class="w-full h-full object-cover">
+                </div>
+                <h3 id="prod-name-2" class="text-lg font-bold text-brand-text-primary">Recommendation 2</h3>
+                <p class="mt-1 text-sm text-brand-text-secondary">A product perfect for your mood.</p>
+                <div class="flex-grow"></div> <!-- Spacer -->
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-xl font-bold text-brand-primary">$24.99</span>
+                    <button class="bg-brand-cta text-white font-medium text-sm px-5 py-2.5 rounded-full hover:bg-brand-cta-hover transition-all duration-300">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+
+            <!-- Placeholder Product Card 3 -->
+            <div class="reveal-card bg-brand-card-bg border border-brand-border rounded-2xl p-6 soft-shadow flex flex-col">
+                <div class="aspect-video bg-brand-bg rounded-lg mb-4 overflow-hidden">
+                    <img src="https://placehold.co/400x300/F5F7FA/5F6368?text=Product+Image" alt="Product Image" class="w-full h-full object-cover">
+                </div>
+                <h3 id="prod-name-3" class="text-lg font-bold text-brand-text-primary">Recommendation 3</h3>
+                <p class="mt-1 text-sm text-brand-text-secondary">A product perfect for your mood.</p>
+                <div class="flex-grow"></div> <!-- Spacer -->
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-xl font-bold text-brand-primary">$89.99</span>
+                    <button class="bg-brand-cta text-white font-medium text-sm px-5 py-2.5 rounded-full hover:bg-brand-cta-hover transition-all duration-300">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-brand-border mt-16">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12 text-center">
+        <p classs="text-brand-text-secondary">
+            © 2025 Emotion Commerce. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<!-- Vanilla JavaScript for Interactions -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. Mood Selection Logic ---
+        const moodCards = document.querySelectorAll('.mood-card');
+        const recommendationsSection = document.getElementById('recommendations');
+        const selectedMoodSpan = document.getElementById('selected-mood');
+
+        // Get product name elements to update them dynamically (for demo)
+        const prodName1 = document.getElementById('prod-name-1');
+        const prodName2 = document.getElementById('prod-name-2');
+        const prodName3 = document.getElementById('prod-name-3');
+
+        moodCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const mood = card.dataset.mood;
+
+                // Update UI: Highlight selected card
+                moodCards.forEach(c => c.classList.remove('active-mood'));
+                card.classList.add('active-mood');
+
+                // Update recommendations title
+                selectedMoodSpan.textContent = mood;
+
+                // Show the recommendations section
+                recommendationsSection.classList.remove('hidden');
+
+                // --- Demo Logic: Update product names based on mood ---
+                // In a real app, you'd fetch/filter products here.
+                if (mood === 'Happy') {
+                    prodName1.textContent = 'Colorful Art Set';
+                    prodName2.textContent = 'Party Game Collection';
+                    prodName3.textContent = 'Sparkling Juice';
+                } else if (mood === 'Sad') {
+                    prodName1.textContent = 'Cozy Weighted Blanket';
+                    prodName2.textContent = 'Aromatherapy Diffuser';
+                    prodName3.textContent = 'Artisan Hot Chocolate';
+                } else if (mood === 'Stressed') {
+                    prodName1.textContent = 'Calming Bath Bomb Set';
+                    prodName2.textContent = 'Stress-Relief Putty';
+                    prodName3.textContent = 'Herbal Tea Sampler';
+                } else {
+                    // Default for other moods
+                    prodName1.textContent = `Product for ${mood} Mood 1`;
+                    prodName2.textContent = `Product for ${mood} Mood 2`;
+                    prodName3.textContent = `Product for ${mood} Mood 3`;
+                }
+
+                // Scroll to the recommendations
+                recommendationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // --- 2. Scroll Reveal Animation for All Cards ---
+        // This observer watches all cards (.reveal-card)
+        const cards = document.querySelectorAll('.reveal-card');
+
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // 10% of the card must be visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        }, observerOptions);
+
+        // Observe each card
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+
+    });
+</script>
+
+</body>
+</html>
